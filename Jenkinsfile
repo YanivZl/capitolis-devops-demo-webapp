@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         // Customize these environment variables as per your setup
-        DOCKER_HUB_CREDENTIALS = credentials('dokcer-hub')
+        DOCKER_HUB_CREDENTIALS = credentials('docker-hub')
         DOCKER_IMAGE_NAME = 'capitolis-devops-demo-webapp'
         DOCKERFILE_PATH = './Dockerfile'
     }
