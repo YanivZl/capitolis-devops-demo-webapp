@@ -1,7 +1,7 @@
 podTemplate(label: 'builder',
             containers: [
                     containerTemplate(name: 'nodejs', image: 'node:21-alpine3.18', command: 'cat', ttyEnabled: true, privileged: true),
-                    containerTemplate(name: 'dind', image: 'odavid/jenkins-jnlp-slave:4.10-2-31-jdk11', command: '/usr/local/bin/wrapdocker', ttyEnabled: true, privileged: true)
+                    containerTemplate(name: 'dind', image: 'odavid/jenkins-jnlp-slave:4.10-2-31-jdk11', command: '/usr/local/bin/wrapdocker', ttyEnabled: true, privileged: true),
                     containerTemplate(name: 'helm-k8s', image: 'lachlanevenson/k8s-helm:v3.10.2', command: 'cat', ttyEnabled: true, privileged: true)
             ]) {
 
