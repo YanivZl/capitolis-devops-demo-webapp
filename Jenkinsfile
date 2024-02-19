@@ -4,19 +4,14 @@ podTemplate(label: 'builder',
                     containerTemplate(name: 'dind', image: 'odavid/jenkins-jnlp-slave:4.10-2-31-jdk11', command: '/usr/local/bin/wrapdocker', ttyEnabled: true, privileged: true),
                     containerTemplate(name: 'helm-k8s', image: 'lachlanevenson/k8s-helm:v3.10.2', command: 'cat', ttyEnabled: true, privileged: true)
             ]) {
-
         node('builder') {
-            stage('Init') {
-                properties([
-                    parameters {
-                        choice(
-                            name: 'CD Tool',
-                            choices: ['Helm', 'ArgoCD']
-                        )
-                    }
-                ])
+            parameters {
+                choice (
+                    name: 'CD Tool',
+                    choices: 'Helm\nArgoCD',
+                    description: 'Choose deploy tool'
+                )
             }
-            
             
             DOCKER_IMAGE_NAME = env.JOB_NAME.takeWhile { it != '/' }
 
