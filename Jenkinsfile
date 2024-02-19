@@ -6,13 +6,17 @@ podTemplate(label: 'builder',
             ]) {
 
         node('builder') {
-
-            parameters {
-                choice(name: 'CD Tool',
-                    choices: 'Helm\nArgoCD'
-                    defaultValue: 'Helm'
-                )
+            stage('Init') {
+                properties([
+                    parameters {
+                        choice(
+                            name: 'CD Tool',
+                            choices: ['Helm', 'ArgoCD']
+                        )
+                    }
+                ])
             }
+            
             
             DOCKER_IMAGE_NAME = env.JOB_NAME.takeWhile { it != '/' }
 
