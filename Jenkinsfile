@@ -10,7 +10,6 @@ podTemplate(label: 'builder',
             parameters {
                 choice(name: 'CD Tool',
                     choices: 'Helm\nArgoCD'
-                    descrition: 'CD Tool',
                     defaultValue: 'Helm'
                 )
             }
