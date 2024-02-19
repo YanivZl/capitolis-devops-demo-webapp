@@ -1,12 +1,21 @@
 podTemplate(label: 'builder',
             containers: [
-                    containerTemplate(name: 'nodejs', image: 'node:16-alpine3.16', command: 'cat', ttyEnabled: true, privileged: true),
+                    containerTemplate(name: 'nodejs', image: 'node:21-alpine3.18', command: 'cat', ttyEnabled: true, privileged: true),
                     containerTemplate(name: 'dind', image: 'odavid/jenkins-jnlp-slave:4.10-2-31-jdk11', command: '/usr/local/bin/wrapdocker', ttyEnabled: true, privileged: true)
+                    containerTemplate(name: 'helm-k8s', image: 'lachlanevenson/k8s-helm:v3.10.2', command: 'cat', ttyEnabled: true, privileged: true)
             ]) {
 
         node('builder') {
+
+            parameters {
+                choice(name: 'CD Tool',
+                    choices: 'Helm\nArgoCD'
+                    descrition: 'CD Tool',
+                    defaultValue: 'Helm'
+                )
+            }
             
-            DOCKER_IMAGE_NAME = 'capitolis-devops-demo-webapp'
+            DOCKER_IMAGE_NAME = env.JOB_NAME.takeWhile { it != '/' }
 
             stage('Checkout') {
                 checkout scm
@@ -25,7 +34,7 @@ podTemplate(label: 'builder',
                     '''
                 }
             }
-            
+
             stage('Build Docker') {
                 container('dind') {
                     script {
@@ -36,7 +45,7 @@ podTemplate(label: 'builder',
                     }
                 }
             }
-            
+
             stage('Push to Registry') {
                 container('dind') {
                     script {
@@ -46,5 +55,14 @@ podTemplate(label: 'builder',
                     }
                 }
             }
+
+            stage('Deploy with ${params["CD Tool"]}') {
+                container('helm-k8s') {
+                    sh "helm upgrade ${DOCKER_IMAGE_NAME} ./helm"
+                }
+            }
+
+
+
         }
     }
