@@ -1,7 +1,7 @@
 
 # MyApp
 
-Nodejs demo app for running a cloud native Tekton Pipeline.
+Nodejs demo app for running a cloud native Jenkins Pipeline.
 
 This app displays a random picture of a cat.
 
@@ -17,8 +17,6 @@ view the running app.
 
 ## Build and run Nodejs app on Kubernetes using a cloud native Tekton Pipeline
 
-Follow the instructions in the [tekton/](tekton/README.md) directory.
+The aaplication is accessible in [http://cats.yanivzl.com/](http://cats.yanivzl.com/).
 
-### OpenShift
-
-If you are using an OpenShift environment, then follow the instructions in the [openshift/tekton/](openshift/tekton/README.md) directory.
+The build pipeline is accessible in [http://jenkins.yanivzl.com/](http://jenkins.yanivzl.com/).
