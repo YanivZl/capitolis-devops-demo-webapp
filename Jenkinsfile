@@ -54,10 +54,9 @@ podTemplate(label: 'builder',
                 }
             }
 
-            stage('Deploy with ${params["CD Tool"]}') {
-                container('helm-k8s') {
-                    sh "helm upgrade ${DOCKER_IMAGE_NAME} ./helm"
-                }
+            stage('Trigger CD Pipeline') {
+                echo "triggering updatemanifestjob"
+                build job: "${DOCKER_IMAGE_NAME}-cd", parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
             }
 
 
