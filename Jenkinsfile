@@ -30,7 +30,11 @@ podTemplate(label: 'builder',
                 container('dind') {
                     script {
                         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId:'docker-hub', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
-                            dockerImage = docker.build("${DOCKER_HUB_USERNAME}/${DOCKER_IMAGE_NAME}:${BUILD_NUMBER}")
+                            if(env.BRANCH_NAME == 'develop'){
+                                dockerImage = docker.build("${DOCKER_HUB_USERNAME}/${DOCKER_IMAGE_NAME}:dev-${env.BUILD_NUMBER}")
+                            } else {
+                              dockerImage = docker.build("${DOCKER_HUB_USERNAME}/${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}")  
+                            }
                         }
                         sh "docker images"
                     }
@@ -48,8 +52,15 @@ podTemplate(label: 'builder',
             }
 
             stage('Trigger CD Pipeline') {
-                echo "triggering updatemanifestjob"
-                build job: "${DOCKER_IMAGE_NAME}-cd", parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
+                if (env.BRANCH_NAME == 'master') {
+                    echo "Triggering updatemanifestjob"
+                    build job: "${DOCKER_IMAGE_NAME}-cd", parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
+                } else {
+                    echo "Skipping CD pipeline trigger as branch is not 'master'"
+                }
             }
+
+
+
         }
     }
